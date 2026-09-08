@@ -687,7 +687,7 @@ export function ProjectChapter({ project }: { project: Project }) {
         </section>
       ) : null}
 
-      <footer className="case-footer">© 2024 ALL RIGHTS RESERVED</footer>
+      <footer className="case-footer">© 2026 ALL RIGHTS RESERVED</footer>
     </article>
   );
 }
