@@ -260,6 +260,7 @@ export function ActionTogglePanel({
             <svg
               className="case-journey__ring"
               viewBox={`0 0 ${JOURNEY_LOOP_VIEW.w} ${JOURNEY_LOOP_VIEW.h}`}
+              preserveAspectRatio="none"
               aria-hidden
             >
               <rect
@@ -273,6 +274,7 @@ export function ActionTogglePanel({
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2"
+                vectorEffect="non-scaling-stroke"
               />
               {journey.map((_, tick) => {
                 const point = journeyLoopPoint(
@@ -320,16 +322,14 @@ export function ActionTogglePanel({
                   journeySlotProgress(index, journey.length, JOURNEY_LOOP_BOX),
                   JOURNEY_LOOP_BOX,
                 );
-                const left = (point.x / JOURNEY_LOOP_VIEW.w) * 100;
-                const top = (point.y / JOURNEY_LOOP_VIEW.h) * 100;
                 return (
                   <li
                     key={step.label}
                     className="case-journey__step"
                     style={
                       {
-                        left: `${left}%`,
-                        top: `${top}%`,
+                        left: `${(point.x / JOURNEY_LOOP_VIEW.w) * 100}%`,
+                        top: `${(point.y / JOURNEY_LOOP_VIEW.h) * 100}%`,
                       } as CSSProperties
                     }
                   >

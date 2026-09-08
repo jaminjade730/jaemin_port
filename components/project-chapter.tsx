@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import Image from "next/image";
 import { ActionTogglePanel } from "@/components/action-toggle-panel";
 import { CaseYouTube } from "@/components/case-youtube";
+import { ViewResearchToggle } from "@/components/view-research-toggle";
 import type { Project } from "@/data/projects";
 
 const META_LABELS = [
@@ -502,11 +503,53 @@ export function ProjectChapter({ project }: { project: Project }) {
               })}
             </div>
           ) : null}
-          <div className="case-situation__body">
-            {situationBody.map((paragraph) => (
-              <p key={paragraph}>{withStyledPhrases(paragraph)}</p>
-            ))}
-          </div>
+          {project.situationDetail ? (
+            <div className="case-situation__detail">
+              <p className="case-situation__detail-label">
+                {project.situationDetail.label}
+              </p>
+              <p className="case-situation__detail-title">
+                {withStyledPhrases(project.situationDetail.title)}
+              </p>
+              <p className="case-situation__detail-body">
+                {withStyledPhrases(project.situationDetail.body)}
+              </p>
+              {project.situationResearch ? (
+                <ViewResearchToggle>
+                  <div className="case-research__content">
+                    <p className="case-research__title">
+                      {project.situationResearch.title}
+                    </p>
+                    <div className="case-research__media">
+                      <Image
+                        src={project.situationResearch.image}
+                        alt={project.situationResearch.title}
+                        width={1600}
+                        height={900}
+                        quality={90}
+                        className="case-research__img"
+                        sizes="(max-width: 860px) 100vw, 720px"
+                      />
+                    </div>
+                    {project.situationResearch.body?.map((paragraph) => (
+                      <p
+                        key={paragraph}
+                        className="case-situation__detail-body"
+                      >
+                        {withStyledPhrases(paragraph)}
+                      </p>
+                    ))}
+                  </div>
+                </ViewResearchToggle>
+              ) : null}
+            </div>
+          ) : situationBody.length ? (
+            <div className="case-situation__body">
+              {situationBody.map((paragraph) => (
+                <p key={paragraph}>{withStyledPhrases(paragraph)}</p>
+              ))}
+            </div>
+          ) : null}
         </section>
       )}
 

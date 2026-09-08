@@ -167,7 +167,7 @@ export function AudioProvider({ children }: { children: ReactNode }) {
     const isInteractive = (node: EventTarget | null) => {
       if (!(node instanceof Element)) return null;
       return node.closest(
-        'button, a, [role="button"], summary, .board-works__link, .intro__link, .intro__cta, .intro__sound, .intro__theme, .profile-cell__action, .case-action__toggle, .case-header__link',
+        'button, a, [role="button"], summary, .board-works__link, .intro__link, .intro__cta, .intro__sound, .intro__theme, .profile-cell__action, .case-action__toggle, .case-research__toggle, .case-header__link',
       );
     };
 

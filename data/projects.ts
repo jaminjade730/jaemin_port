@@ -73,6 +73,18 @@ export type Project = {
   };
   /** PROBLEM 메인 문구 아래 인과 플로우 */
   situationFlow?: string[];
+  /** PROBLEM 플로우 아래 상세 (라벨 · 질문 · 보조 설명) */
+  situationDetail?: {
+    label: string;
+    title: string;
+    body: string;
+  };
+  /** PROBLEM VIEW RESEARCH 토글 본문 */
+  situationResearch?: {
+    title: string;
+    image: string;
+    body?: string[];
+  };
   /** PROBLEM 하단 가로 단계 카드 */
   situationSteps?: { label: string; title?: string; body?: string }[];
   /** Action 패널 제목. 기본: Action */
@@ -246,7 +258,8 @@ export const projects: Project[] = [
     brand: "IKEA",
     subtitle:
       "구매가 끝난 고객에게\n다시 IKEA를 방문할 이유를 만들다",
-    oneLiner: "오프라인 경험 → 제품 관심 → 구매 → 리마인드 → 재방문",
+    oneLiner:
+      "구매 이후 감소하는 고객 접점을 야외 브랜드 경험으로 확장하고, 체류·제품 경험·재방문까지 이어지는 Lock-in 구조를 설계했습니다.",
     summaryBar:
       "2026.05.13–05.19　|　Team Project　|　Strategy · Persona · UI/UX · Creative",
     hook: "Experience beyond purchase",
@@ -282,41 +295,48 @@ export const projects: Project[] = [
       title: "PROJECT AT A GLANCE",
       items: [
         {
-          label: "PROBLEM",
-          body: "긴 구매 주기로 인한\n구매 이후 고객 접점 단절",
+          label: "3 TARGETS",
+          body: "타깃별 방문 동기 설계\nFamily · Single · DIY",
         },
         {
-          label: "TARGET",
-          body: "IKEA 기존 구매 고객",
+          label: "2-LEVEL LOCK-IN",
+          body: "체류 + 재방문\n당일 체류 확대부터 이후 관계 지속까지",
         },
         {
-          label: "SOLUTION",
-          body: "오프라인 체험형 캠페인\nHej! Park",
+          label: "15%",
+          body: "현장 구매 연결\n공간별 패키지 QR 구매 시 결합 할인",
         },
         {
-          label: "GOAL",
-          body: "재방문 활성화 + 브랜드 충성도 강화",
+          label: "3 MONTHS",
+          body: "재방문 장치",
         },
       ],
     },
     situationTitle: "PROBLEM",
-    situation: [
-      "가구 구매가 끝나면, IKEA를 다시 찾을 이유도 줄어든다",
-      "IKEA는 외곽 대형 매장이라는 특성과 긴 가구 구매 주기로 인해, 구매 이후 고객과의 접점이 단절될 가능성이 있다고 판단했습니다",
-    ],
+    situation: ["구매가 끝나면,\nIKEA와의 접점도 줄어든다."],
     situationFlow: [
-      "구매",
+      "대형 가구 구매",
       "긴 구매 주기",
-      "브랜드 접점 감소",
-      "WHY COME BACK?",
+      "방문 명분 감소",
+      "브랜드 접점 단절",
     ],
+    situationDetail: {
+      label: "WHY COME BACK?",
+      title:
+        "“구매할 것이 없는 기존 고객에게 어떻게 다시 IKEA를 방문할 명분을 만들 수 있을까?”",
+      body: "IKEA의 긴 구매 주기와 지리적 접근성 한계로 구매 이후 고객과의 접점이 감소하는 문제에 주목하고, 이탈 고객의 복귀와 브랜드 충성도 강화를 핵심 과제로 정의했습니다.",
+    },
+    situationResearch: {
+      title: "시장&경쟁사 분석",
+      image: "/projects/ikea-hej-park/09-research-competitors.jpg",
+    },
     actionTitle: "Action | LOCK-IN JOURNEY",
     actionJourney: [
-      { label: "01 EXPERIENCE", title: "Hej! Park 체험" },
-      { label: "02 INTEREST", title: "제품 관심" },
-      { label: "03 PURCHASE", title: "QR · 패키지 할인" },
-      { label: "04 REMIND", title: "Push 리마인드" },
-      { label: "05 REVISIT", title: "재방문 혜택" },
+      { label: "01 VISIT MOTIVATION", title: "새로운 방문 명분" },
+      { label: "02 BRAND EXPERIENCE", title: "스웨덴식 피크닉 + 제품 체험" },
+      { label: "03 BRAND FAVORABILITY", title: "즐거운 경험을 IKEA와 연결" },
+      { label: "04 PRODUCT INTEREST", title: "제품 관심" },
+      { label: "05 PURCHASE / REVISIT", title: "구매 및 다음 방문" },
     ],
     actions: [
       {
@@ -345,11 +365,27 @@ export const projects: Project[] = [
       },
     ],
     result: [],
-    resultItems: [
-      "오프라인 체험 캠페인 Hej! Park 기획",
-      "룰렛·제품 체험·QR 구매·패키지 할인으로 현장 경험과 구매 행동 연결",
-      "관심 제품 Push 알림 + 3개월 후 할인권으로 재방문 리마인드 구조 설계",
-      "경험 → 관심 → 구매 → 리마인드 → 재방문의 고객 여정을 하나의 흐름으로 구체화",
+    resultSections: [
+      {
+        label: "EXPERIENCE",
+        title: "새로운 방문 목적 설계",
+        body: "구매가 아닌 경험 중심 방문 동기",
+      },
+      {
+        label: "PURCHASE",
+        title: "체험 → 구매 연결",
+        body: "제품 경험 이후 구매 행동 설계",
+      },
+      {
+        label: "CRM",
+        title: "경험 이후 접점 확장",
+        body: "Push 기반 브랜드 리마인드",
+      },
+      {
+        label: "REVISIT",
+        title: "재방문 구조 설계",
+        body: "후속 혜택을 통한 다음 방문 동기",
+      },
     ],
     learned: {
       highlight:
