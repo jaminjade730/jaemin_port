@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { CaseYouTube } from "@/components/case-youtube";
 import { ConceptFlowVisual } from "@/components/concept-flow-visual";
 import { ProblemInsightBlock } from "@/components/case/problem-insight";
@@ -146,19 +147,50 @@ export function ActionStack({ project }: { project: Project }) {
               {withStyledPhrases(project.aiCreative.body)}
             </p>
           ) : null}
-          <div className="case-ai-creative__grid">
-            {project.aiCreative.items.map((item) => (
-              <article
-                key={item.label}
-                className="case-surface-card case-ai-creative__card"
-              >
-                <p className="case-kicker case-ai-creative__label">
-                  {item.label}
-                </p>
-                <p className="case-ai-creative__title">{item.title}</p>
-                <p className="case-ai-creative__body">{item.body}</p>
-              </article>
-            ))}
+          <div
+            className={`case-ai-creative__layout${
+              project.aiCreative.images?.length
+                ? " case-ai-creative__layout--split"
+                : ""
+            }`}
+          >
+            <div className="case-ai-creative__stack">
+              {project.aiCreative.items.map((item) => (
+                <article
+                  key={item.label}
+                  className="case-surface-card case-ai-creative__card"
+                >
+                  <p className="case-kicker case-ai-creative__label">
+                    {item.label}
+                  </p>
+                  <p className="case-ai-creative__title">{item.title}</p>
+                  <p className="case-ai-creative__body">{item.body}</p>
+                </article>
+              ))}
+            </div>
+            {project.aiCreative.images?.length ? (
+              <div className="case-ai-creative__visuals">
+                {project.aiCreative.images.map((image) => (
+                  <figure key={image.src} className="case-ai-creative__shot">
+                    {image.label ? (
+                      <figcaption className="case-kicker case-ai-creative__shot-label">
+                        {image.label}
+                      </figcaption>
+                    ) : null}
+                    <div className="case-ai-creative__shot-frame">
+                      <Image
+                        src={image.src}
+                        alt={image.alt}
+                        fill
+                        quality={95}
+                        className="object-cover"
+                        sizes="(max-width: 839px) 100vw, 48vw"
+                      />
+                    </div>
+                  </figure>
+                ))}
+              </div>
+            ) : null}
           </div>
         </div>
       ) : null}

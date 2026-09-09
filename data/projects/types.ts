@@ -133,6 +133,7 @@ export type Project = {
     lead: string;
     body?: string;
     items: { label: string; title: string; body: string }[];
+    images?: { src: string; alt: string; label?: string }[];
   };
   /** DISTRIBUTION & TARGET KPI */
   distributionKpi?: {

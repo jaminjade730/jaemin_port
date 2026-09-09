@@ -170,6 +170,18 @@ export const koreaTravel: Project = {
           body: "AI를 활용해 전통과 현대의 서로 다른 관광 경험을 영상으로 제작",
         },
       ],
+      images: [
+        {
+          src: "/projects/korea-travel/ai-tradition.jpg",
+          alt: "전통 한국 여행 1인칭 AI 장면",
+          label: "TRADITION",
+        },
+        {
+          src: "/projects/korea-travel/ai-modern.jpg",
+          alt: "현대 한국 여행 1인칭 AI 장면",
+          label: "MODERN",
+        },
+      ],
     },
     distributionKpi: {
       title: "DISTRIBUTION & TARGET KPI",
