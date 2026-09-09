@@ -1,189 +1,15 @@
 import type { ReactNode } from "react";
 import Image from "next/image";
 import { ActionTogglePanel } from "@/components/action-toggle-panel";
-import { CaseYouTube } from "@/components/case-youtube";
-import { ConceptFlowVisual } from "@/components/concept-flow-visual";
-import { TargetStrategySection } from "@/components/target-strategy-section";
-import { ViewResearchToggle } from "@/components/view-research-toggle";
+import { ActionStack } from "@/components/case/action-stack";
+import { FlowTriangle } from "@/components/case/flow-triangle";
+import { LearnedSection } from "@/components/case/learned-section";
+import { MediaFrame } from "@/components/case/media-frame";
+import { ProblemInsightBlock } from "@/components/case/problem-insight";
+import { ResultBlock } from "@/components/case/result-block";
+import { SituationSection } from "@/components/case/situation-section";
+import { parseMeta, withStyledPhrases } from "@/components/case/utils";
 import type { Project } from "@/data/projects";
-
-const META_LABELS = [
-  "Project Type",
-  "Project Goal",
-  "Project Theme",
-  "Key Skills",
-  "Channel",
-  "Period",
-  "Brand",
-  "Tools",
-  "Role",
-] as const;
-
-function withStyledPhrases(text: string): ReactNode {
-  const phrases = [
-    { value: "Live in your noize", italic: true },
-    { value: "Tea-like Coffee", italic: false },
-  ];
-  type Segment =
-    | { type: "text"; value: string }
-    | { type: "phrase"; value: string; italic: boolean };
-
-  let segments: Segment[] = [{ type: "text", value: text }];
-
-  for (const phrase of phrases) {
-    segments = segments.flatMap((segment) => {
-      if (segment.type !== "text" || !segment.value.includes(phrase.value)) {
-        return [segment];
-      }
-
-      const parts = segment.value.split(phrase.value);
-      const next: Segment[] = [];
-
-      parts.forEach((part, index) => {
-        if (index > 0) {
-          next.push({
-            type: "phrase",
-            value: phrase.value,
-            italic: phrase.italic,
-          });
-        }
-        if (part) next.push({ type: "text", value: part });
-      });
-
-      return next;
-    });
-  }
-
-  const nodes: ReactNode[] = [];
-
-  segments.forEach((segment, index) => {
-    if (segment.type === "phrase") {
-      const content = `‘${segment.value}’`;
-      nodes.push(
-        segment.italic ? (
-          <em key={`phrase-${index}`} className="italic">
-            {content}
-          </em>
-        ) : (
-          <span key={`phrase-${index}`}>{content}</span>
-        ),
-      );
-
-      const following = segments[index + 1];
-      if (
-        following?.type === "text" &&
-        following.value &&
-        !/^[\s)»\]）]/.test(following.value)
-      ) {
-        nodes.push(" ");
-      }
-      return;
-    }
-
-    nodes.push(segment.value);
-  });
-
-  return nodes;
-}
-
-function parseMeta(item: string): { label: string; value: string } {
-  const label = META_LABELS.find(
-    (name) => item === name || item.startsWith(`${name} `),
-  );
-  if (!label) return { label: "", value: item };
-  return {
-    label,
-    value: item.slice(label.length).trimStart(),
-  };
-}
-
-function youtubeEmbedId(video: string): string | null {
-  const trimmed = video.trim();
-  if (/^[\w-]{11}$/.test(trimmed)) return trimmed;
-
-  try {
-    const url = new URL(trimmed);
-    if (url.hostname.includes("youtu.be")) {
-      const id = url.pathname.replace(/^\//, "").slice(0, 11);
-      return id || null;
-    }
-    const v = url.searchParams.get("v");
-    if (v) return v;
-    const embed = url.pathname.match(/\/embed\/([\w-]{11})/);
-    if (embed) return embed[1];
-  } catch {
-    return null;
-  }
-
-  return null;
-}
-
-function MediaFrame({
-  src,
-  alt,
-  accent,
-  className = "",
-  fit = "cover",
-  containBg = "#fff",
-  priority = false,
-  video,
-}: {
-  src?: string;
-  alt: string;
-  accent: string;
-  className?: string;
-  fit?: "cover" | "contain";
-  containBg?: string;
-  priority?: boolean;
-  video?: string;
-}) {
-  const youtubeId = video ? youtubeEmbedId(video) : null;
-
-  return (
-    <div
-      className={`case-media${fit === "contain" ? " case-media--contain" : ""}${
-        youtubeId ? " case-media--video" : ""
-      } ${className}`}
-      style={fit === "contain" ? { background: containBg } : undefined}
-    >
-      {youtubeId ? (
-        <CaseYouTube videoId={youtubeId} title={alt} />
-      ) : src ? (
-        <Image
-          src={src}
-          alt={alt}
-          fill
-          priority={priority}
-          quality={95}
-          className={fit === "contain" ? "object-contain" : "object-cover"}
-          sizes="(max-width: 840px) 100vw, 40vw"
-        />
-      ) : (
-        <div className="case-media__fallback" style={{ background: accent }} />
-      )}
-    </div>
-  );
-}
-
-function FlowTriangle({
-  className = "case-header__flow-arrow",
-  size = 6,
-}: {
-  className?: string;
-  size?: number;
-}) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 10 12"
-      width={size}
-      height={Math.round(size * 1.2)}
-      aria-hidden
-    >
-      <path d="M1.2 1.1 8.8 6 1.2 10.9Z" fill="currentColor" />
-    </svg>
-  );
-}
 
 function OneLiner({ text }: { text: string }) {
   const parts = text.split(/\s*→\s*/);
@@ -194,160 +20,136 @@ function OneLiner({ text }: { text: string }) {
 
   return (
     <p className="case-header__oneliner case-header__oneliner--flow">
-      {parts.map((part, index) => (
-        <span key={`${part}-${index}`} className="case-header__flow-part">
-          {part}
-        </span>
-      )).reduce<ReactNode[]>((nodes, part, index) => {
-        if (index > 0) nodes.push(<FlowTriangle key={`arrow-${index}`} />);
-        nodes.push(part);
-        return nodes;
-      }, [])}
+      {parts
+        .map((part, index) => (
+          <span key={`${part}-${index}`} className="case-header__flow-part">
+            {part}
+          </span>
+        ))
+        .reduce<ReactNode[]>((nodes, part, index) => {
+          if (index > 0) nodes.push(<FlowTriangle key={`arrow-${index}`} />);
+          nodes.push(part);
+          return nodes;
+        }, [])}
     </p>
   );
 }
 
-function BulletPanel({
-  title,
-  items,
-}: {
-  title: string;
-  items: { title: string; body?: string }[];
-}) {
-  return (
-    <div className="case-panel">
-      <h3 className="case-panel__title">{title}</h3>
-      <ul className="case-panel__list">
-        {items.map((item) => (
-          <li key={item.title}>
-            <p className="case-panel__item-title">{item.title}</p>
-            {item.body ? (
-              <p className="case-panel__item-body">{withStyledPhrases(item.body)}</p>
-            ) : null}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
+function CaseLayouts({ project }: { project: Project }) {
+  const hero = project.images?.hero;
+  const mid = project.images?.mid ?? hero;
+  const triptychMid = project.images?.mid;
+  const actionImages = project.images?.action ?? [];
+  const resultImage = project.images?.result ?? mid;
+  const actionItems = project.actions;
 
-function ProsePanel({ title, paragraphs }: { title: string; paragraphs: string[] }) {
-  return (
-    <div className="case-panel">
-      <h3 className="case-panel__title">{title}</h3>
-      <div className="case-panel__prose">
-        {paragraphs.map((paragraph) => (
-          <p key={paragraph}>{withStyledPhrases(paragraph)}</p>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function ResultBlock({
-  project,
-  mode,
-}: {
-  project: Project;
-  mode: "panel" | "solo";
-}) {
-  if (project.resultSections?.length) {
-    const content = (
-      <>
-        {project.resultEyebrow ? (
-          <p className="case-result__eyebrow">{project.resultEyebrow}</p>
-        ) : null}
-        <ul className="case-panel__list case-result-sections case-result-output">
-          {project.resultSections.map((section) => (
-            <li key={`${section.label ?? ""}-${section.title}`}>
-              {section.label ? (
-                <p className="case-result-section__label">{section.label}</p>
-              ) : null}
-              <p className="case-panel__item-title">{section.title}</p>
-              {section.body ? (
-                <p className="case-panel__item-body">
-                  {withStyledPhrases(section.body)}
-                </p>
-              ) : null}
-            </li>
-          ))}
-        </ul>
-        {project.result.length ? (
-          <div className="case-result__summary">
-            {project.result.map((paragraph) => (
-              <p key={paragraph}>{withStyledPhrases(paragraph)}</p>
-            ))}
-          </div>
-        ) : null}
-      </>
-    );
-
-    if (mode === "solo") {
-      return (
-        <section className="case-block case-result-solo">
-          <h3 className="case-block__title">Result</h3>
-          {content}
-        </section>
-      );
-    }
-
+  if (project.layout === "triptych") {
     return (
-      <div className="case-panel">
-        <h3 className="case-panel__title">Result</h3>
-        {content}
-      </div>
-    );
-  }
-
-  const resultItems =
-    project.resultItems ??
-    project.competencies?.map((c) => `${c.title} — ${c.body}`);
-
-  if (resultItems?.length) {
-    const items = resultItems.map((item) => ({ title: item }));
-    if (mode === "solo") {
-      return (
-        <section className="case-block case-result-solo">
-          <h3 className="case-block__title">Result</h3>
-          <ul className="case-panel__list">
-            {items.map((item) => (
-              <li key={item.title}>
-                <p className="case-panel__item-title">{item.title}</p>
-              </li>
-            ))}
-          </ul>
-        </section>
-      );
-    }
-    return <BulletPanel title="Result" items={items} />;
-  }
-
-  if (mode === "solo") {
-    return (
-      <section className="case-block case-result-solo">
-        <h3 className="case-block__title">Result</h3>
-        <div className="case-panel__prose">
-          {project.result.map((paragraph) => (
-            <p key={paragraph}>{withStyledPhrases(paragraph)}</p>
-          ))}
-        </div>
+      <section
+        className={`case-triptych${triptychMid ? "" : " case-triptych--pair"}`}
+      >
+        <ActionTogglePanel
+          items={actionItems}
+          title={project.actionTitle}
+          journey={project.actionJourney}
+          accent={project.accent}
+        />
+        {triptychMid ? (
+          <MediaFrame
+            src={triptychMid}
+            alt={`${project.title} detail`}
+            accent={project.accent}
+            className="case-triptych__media"
+            fit="cover"
+          />
+        ) : null}
+        <ResultBlock project={project} mode="panel" />
       </section>
     );
   }
 
-  return <ProsePanel title="Result" paragraphs={project.result} />;
+  if (project.layout === "zigzag") {
+    return (
+      <>
+        <section className="case-zigzag">
+          <ActionTogglePanel
+            items={actionItems}
+            title={project.actionTitle}
+            journey={project.actionJourney}
+            accent={project.accent}
+          />
+          <MediaFrame
+            src={mid}
+            alt={`${project.title} action`}
+            accent={project.accent}
+            fit="cover"
+          />
+        </section>
+        <section className="case-zigzag case-zigzag--flip">
+          <MediaFrame
+            src={resultImage}
+            alt={`${project.title} result`}
+            accent={project.accent}
+            fit="cover"
+          />
+          <ResultBlock project={project} mode="panel" />
+        </section>
+      </>
+    );
+  }
+
+  return (
+    <>
+      {actionItems.length ? (
+        <section className="case-zigzag case-zigzag--pair case-zigzag--mockups">
+          <ActionTogglePanel
+            items={actionItems}
+            title={project.actionTitle}
+            journey={project.actionJourney}
+            accent={project.accent}
+          />
+          <div className="case-mockups">
+            {actionImages.map((src, index) => (
+              <div key={src} className="case-mockups__item">
+                <Image
+                  src={src}
+                  alt={`${project.title} mockup ${index + 1}`}
+                  width={495}
+                  height={1024}
+                  quality={95}
+                  className="case-mockups__img"
+                  sizes="(max-width: 840px) 30vw, 160px"
+                />
+              </div>
+            ))}
+          </div>
+        </section>
+      ) : actionImages.length ? (
+        <section className="case-block case-mockups-solo">
+          <div className="case-mockups">
+            {actionImages.map((src, index) => (
+              <div key={src} className="case-mockups__item">
+                <Image
+                  src={src}
+                  alt={`${project.title} mockup ${index + 1}`}
+                  width={495}
+                  height={1024}
+                  quality={95}
+                  className="case-mockups__img"
+                  sizes="(max-width: 840px) 30vw, 160px"
+                />
+              </div>
+            ))}
+          </div>
+        </section>
+      ) : null}
+      <ResultBlock project={project} mode="solo" />
+    </>
+  );
 }
 
 export function ProjectChapter({ project }: { project: Project }) {
-  const prompt = project.situation[0] ?? "";
-  const situationBody = project.situation.slice(1);
-  const actionItems = project.actions;
-
   const hero = project.images?.hero;
-  const mid = project.images?.mid ?? hero;
-  const triptychMid = project.images?.mid;
-  const actionImages = project.images?.action ?? (mid ? [mid, mid] : []);
-  const resultImage = project.images?.result ?? mid;
 
   return (
     <article
@@ -391,11 +193,7 @@ export function ProjectChapter({ project }: { project: Project }) {
           className="case-overview__media"
           fit="cover"
           video={project.video}
-          priority={
-            project.id === "ikea-hej-park" ||
-            project.id === "lonz" ||
-            project.id === "korea-travel"
-          }
+          priority={project.images?.priority ?? Boolean(hero || project.video)}
         />
         <div className="case-meta">
           {project.glance ? (
@@ -431,9 +229,7 @@ export function ProjectChapter({ project }: { project: Project }) {
                 const { label, value } = parseMeta(item);
                 return (
                   <div key={item} className="case-meta__row">
-                    {label ? (
-                      <p className="case-meta__label">{label}</p>
-                    ) : null}
+                    {label ? <p className="case-meta__label">{label}</p> : null}
                     <p className="case-meta__value">{withStyledPhrases(value)}</p>
                   </div>
                 );
@@ -443,256 +239,35 @@ export function ProjectChapter({ project }: { project: Project }) {
         </div>
       </section>
 
-      {project.situationCompare ? (
-        <section className="case-block case-situation case-situation--compare">
-          <div className="case-situation__head">
-            <h3 className="case-block__title">
-              {project.situationTitle ?? "Situation & Task"}
-            </h3>
-            <p className="case-situation__prompt">{withStyledPhrases(prompt)}</p>
-          </div>
-          <div className="case-situation__compare">
-            <div className="case-situation__card">
-              <p className="case-situation__card-label">
-                {project.situationCompare.left.label}
-              </p>
-              <p className="case-situation__card-title">
-                {project.situationCompare.left.title}
-              </p>
-              <p className="case-situation__card-body">
-                {project.situationCompare.left.body}
-              </p>
-            </div>
-            <div className="case-situation__arrow" aria-hidden>
-              <FlowTriangle className="case-situation__arrow-icon" size={12} />
-            </div>
-            <div className="case-situation__card">
-              <p className="case-situation__card-label">
-                {project.situationCompare.right.label}
-              </p>
-              <p className="case-situation__card-title">
-                {project.situationCompare.right.title}
-              </p>
-              <p className="case-situation__card-body">
-                {project.situationCompare.right.body}
-              </p>
-            </div>
-          </div>
-        </section>
-      ) : (
-        <section className="case-block case-situation case-situation--stack">
-          <div className="case-situation__head">
-            <h3 className="case-block__title">
-              {project.situationTitle ?? "Situation & Task"}
-            </h3>
-            <p className="case-situation__prompt">{withStyledPhrases(prompt)}</p>
-          </div>
-          {project.situationFlow?.length ? (
-            <div className="case-situation__flow" aria-label="Problem flow">
-              {project.situationFlow.flatMap((step, index) => {
-                const nodes = [];
-                if (index > 0) {
-                  nodes.push(
-                    <span
-                      key={`flow-arrow-${index}`}
-                      className="case-situation__flow-arrow"
-                      aria-hidden
-                    >
-                      <FlowTriangle size={8} />
-                    </span>,
-                  );
-                }
-                const isLast = index === project.situationFlow!.length - 1;
-                nodes.push(
-                  <span
-                    key={step}
-                    className={`case-situation__flow-step${isLast ? " case-situation__flow-step--focus" : ""}`}
-                    style={
-                      isLast
-                        ? { background: project.accent, color: "#fff" }
-                        : undefined
-                    }
-                  >
-                    {step}
-                  </span>,
-                );
-                return nodes;
-              })}
-            </div>
-          ) : null}
-          {project.situationDetail ? (
-            <div className="case-situation__detail">
-              <p className="case-situation__detail-label">
-                {project.situationDetail.label}
-              </p>
-              <p className="case-situation__detail-title">
-                {withStyledPhrases(project.situationDetail.title)}
-              </p>
-              <p className="case-situation__detail-body">
-                {withStyledPhrases(project.situationDetail.body)}
-              </p>
-              {project.situationResearch?.length ? (
-                <ViewResearchToggle items={project.situationResearch} />
-              ) : null}
-            </div>
-          ) : situationBody.length ? (
-            <div className="case-situation__body">
-              {situationBody.map((paragraph) => (
-                <p key={paragraph}>{withStyledPhrases(paragraph)}</p>
-              ))}
-            </div>
-          ) : null}
-        </section>
-      )}
+      <SituationSection project={project} />
 
-      {project.situationSteps?.length ? (
-        <div className="case-situation-steps" aria-label="Process steps">
-          {project.situationSteps.flatMap((step, index) => {
-            const nodes = [];
-            if (index > 0) {
-              nodes.push(
-                <div
-                  key={`arrow-${step.label}`}
-                  className="case-situation__arrow case-situation-steps__arrow"
-                  aria-hidden
-                >
-                  <FlowTriangle className="case-situation__arrow-icon" size={12} />
-                </div>,
-              );
-            }
-            nodes.push(
-              <section key={step.label} className="case-situation__step">
-                <p className="case-situation__step-label">{step.label}</p>
-                {step.title ? (
-                  <p className="case-situation__step-title">{step.title}</p>
-                ) : null}
-                {step.body ? (
-                  <p className="case-situation__step-body">{step.body}</p>
-                ) : null}
-              </section>,
-            );
-            return nodes;
-          })}
-        </div>
-      ) : null}
-
-      {project.problemInsight ? (
-        <section className="case-block case-problem-insight">
+      {project.projectTask ? (
+        <section className="case-block case-task">
           <h3 className="case-block__title">
-            {project.problemInsight.title ?? "VISIT MOTIVATION"}
+            {project.projectTask.title ?? "TASK"}
           </h3>
-          {project.problemInsight.label ? (
-            <p className="case-problem-insight__label">
-              {project.problemInsight.label}
-            </p>
+          {project.projectTask.lead ? (
+            <p className="case-task__lead">{project.projectTask.lead}</p>
           ) : null}
-          <div className="case-problem-insight__shift">
-            <div className="case-problem-insight__card">
-              <p className="case-problem-insight__card-label">
-                {project.problemInsight.before.label ?? "BEFORE"}
-              </p>
-              <p className="case-problem-insight__card-text">
-                {project.problemInsight.before.text}
-              </p>
-            </div>
-            <div className="case-problem-insight__arrow" aria-hidden>
-              <span className="case-problem-insight__arrow-desktop">→</span>
-              <span className="case-problem-insight__arrow-mobile">↓</span>
-            </div>
-            <div className="case-problem-insight__card case-problem-insight__card--after">
-              <p className="case-problem-insight__card-label">
-                {project.problemInsight.after.label ?? "AFTER"}
-              </p>
-              <p className="case-problem-insight__card-text">
-                {project.problemInsight.after.text}
-              </p>
-            </div>
-          </div>
-          <div className="case-problem-insight__body">
-            {project.problemInsight.insightLabel ? (
-              <p className="case-problem-insight__body-label">
-                {project.problemInsight.insightLabel}
-              </p>
-            ) : null}
-            <p className="case-problem-insight__body-text">
-              {withStyledPhrases(project.problemInsight.body)}
-            </p>
-          </div>
-        </section>
-      ) : null}
-
-      {project.concept ||
-      project.targetStrategy ||
-      project.lockInStrategy ? (
-        <section className="case-block case-action-stack">
-          <h3 className="case-block__title">
-            {project.actionTitle ?? "Action"}
-          </h3>
-
-          {project.concept ? (
-            <div className="case-concept case-action-stack__section">
-              <h4 className="case-action-stack__title">
-                {project.concept.title ?? "CONCEPT"}
-              </h4>
-              <div className="case-concept__hero">
-                <p className="case-concept__name">{project.concept.name}</p>
-                <p className="case-concept__tagline">{project.concept.tagline}</p>
-                <p className="case-concept__body">
-                  {withStyledPhrases(project.concept.body)}
+          <p className="case-task__prompt">
+            {withStyledPhrases(project.projectTask.prompt)}
+          </p>
+          {project.projectTask.goals.length ? (
+            <div className="case-task__goals">
+              {project.projectTask.goalsTitle ? (
+                <p className="case-task__goals-title">
+                  {project.projectTask.goalsTitle}
                 </p>
-              </div>
-              {project.concept.flow.length ? (
-                <ConceptFlowVisual
-                  flow={project.concept.flow}
-                  outdoorPreviews={project.concept.outdoorPreviews}
-                />
               ) : null}
-            </div>
-          ) : null}
-
-          {project.targetStrategy ? (
-            <TargetStrategySection
-              title={project.targetStrategy.title}
-              lead={project.targetStrategy.lead}
-              badge={project.targetStrategy.badge}
-              targets={project.targetStrategy.targets}
-              embedded
-            />
-          ) : null}
-
-          {project.lockInStrategy ? (
-            <div className="case-lockin case-action-stack__section">
-              <h4 className="case-action-stack__title">
-                {project.lockInStrategy.title ?? "LOCK-IN STRATEGY"}
-              </h4>
-              <div className="case-lockin__grid">
-                {project.lockInStrategy.columns.map((column) => (
-                  <article key={column.label} className="case-lockin__col">
-                    <p className="case-lockin__label">{column.label}</p>
-                    <p className="case-lockin__headline">{column.headline}</p>
-                    <div
-                      className="case-lockin__flow"
-                      aria-label={column.headline}
-                    >
-                      {column.flow.map((step, index) => (
-                        <div key={step} className="case-lockin__step-wrap">
-                          {index > 0 ? (
-                            <span className="case-lockin__arrow" aria-hidden>
-                              →
-                            </span>
-                          ) : null}
-                          <span className="case-lockin__step">{step}</span>
-                        </div>
-                      ))}
-                      {column.loop ? (
-                        <span className="case-lockin__loop" aria-hidden>
-                          ↺
-                        </span>
-                      ) : null}
-                    </div>
-                    <p className="case-lockin__body">
-                      {withStyledPhrases(column.body)}
-                    </p>
+              <div className="case-task__grid">
+                {project.projectTask.goals.map((goal) => (
+                  <article
+                    key={goal.label}
+                    className="case-surface-card case-task__card"
+                  >
+                    <p className="case-kicker case-task__label">{goal.label}</p>
+                    <p className="case-task__title">{goal.title}</p>
+                    <p className="case-task__body">{goal.body}</p>
                   </article>
                 ))}
               </div>
@@ -701,128 +276,14 @@ export function ProjectChapter({ project }: { project: Project }) {
         </section>
       ) : null}
 
-      {project.layout === "triptych" ? (
-        <section
-          className={`case-triptych${triptychMid ? "" : " case-triptych--pair"}`}
-        >
-          <ActionTogglePanel
-            items={actionItems}
-            title={project.actionTitle}
-            journey={project.actionJourney}
-            accent={project.accent}
-          />
-          {triptychMid ? (
-            <MediaFrame
-              src={triptychMid}
-              alt={`${project.title} detail`}
-              accent={project.accent}
-              className="case-triptych__media"
-              fit="cover"
-            />
-          ) : null}
-          <ResultBlock project={project} mode="panel" />
-        </section>
+      {project.problemInsight && !project.problemInsight.inAction ? (
+        <ProblemInsightBlock insight={project.problemInsight} mode="block" />
       ) : null}
 
-      {project.layout === "zigzag" ? (
-        <>
-          <section className="case-zigzag">
-            <ActionTogglePanel
-              items={actionItems}
-              title={project.actionTitle}
-              journey={project.actionJourney}
-              accent={project.accent}
-            />
-            <MediaFrame
-              src={mid}
-              alt={`${project.title} action`}
-              accent={project.accent}
-              fit="cover"
-            />
-          </section>
-          <section className="case-zigzag case-zigzag--flip">
-            <MediaFrame
-              src={resultImage}
-              alt={`${project.title} result`}
-              accent={project.accent}
-              fit="cover"
-            />
-            <ResultBlock project={project} mode="panel" />
-          </section>
-        </>
-      ) : null}
+      <ActionStack project={project} />
+      <CaseLayouts project={project} />
 
-      {project.layout === "zigzag-pair" ? (
-        <>
-          {actionItems.length ? (
-            <section className="case-zigzag case-zigzag--pair case-zigzag--mockups">
-              <ActionTogglePanel
-                items={actionItems}
-                title={project.actionTitle}
-                journey={project.actionJourney}
-                accent={project.accent}
-              />
-              <div className="case-mockups">
-                {actionImages.map((src, index) => (
-                  <div key={src} className="case-mockups__item">
-                    <Image
-                      src={src}
-                      alt={`${project.title} mockup ${index + 1}`}
-                      width={495}
-                      height={1024}
-                      quality={95}
-                      className="case-mockups__img"
-                      sizes="(max-width: 840px) 30vw, 160px"
-                    />
-                  </div>
-                ))}
-              </div>
-            </section>
-          ) : actionImages.length ? (
-            <section className="case-block case-mockups-solo">
-              <div className="case-mockups">
-                {actionImages.map((src, index) => (
-                  <div key={src} className="case-mockups__item">
-                    <Image
-                      src={src}
-                      alt={`${project.title} mockup ${index + 1}`}
-                      width={495}
-                      height={1024}
-                      quality={95}
-                      className="case-mockups__img"
-                      sizes="(max-width: 840px) 30vw, 160px"
-                    />
-                  </div>
-                ))}
-              </div>
-            </section>
-          ) : null}
-          <ResultBlock project={project} mode="solo" />
-        </>
-      ) : null}
-
-      {project.learned ? (
-        <section className="case-block case-insight">
-          <h3 className="case-block__title">What I Learned</h3>
-          <div className="case-insight__body">
-            <p className="case-insight__highlight">
-              {withStyledPhrases(project.learned.highlight)}
-            </p>
-            {project.learned.body?.map((paragraph) => (
-              <p key={paragraph}>{withStyledPhrases(paragraph)}</p>
-            ))}
-          </div>
-        </section>
-      ) : project.insight?.length ? (
-        <section className="case-block case-insight">
-          <h3 className="case-block__title">Insight</h3>
-          <div className="case-insight__body">
-            {project.insight.map((paragraph) => (
-              <p key={paragraph}>{withStyledPhrases(paragraph)}</p>
-            ))}
-          </div>
-        </section>
-      ) : null}
+      {project.learned ? <LearnedSection learned={project.learned} /> : null}
 
       <footer className="case-footer">© 2026 ALL RIGHTS RESERVED</footer>
     </article>

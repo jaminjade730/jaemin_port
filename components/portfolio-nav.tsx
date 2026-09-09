@@ -14,11 +14,10 @@ export function PortfolioNav() {
     items[0] ??
     null;
 
-  const containPreview =
-    previewItem?.preview?.includes("logo") ||
-    previewItem?.id === "ikea-hej-park" ||
-    previewItem?.id === "variway" ||
-    previewItem?.id === "lov3-room";
+  const containPreview = previewItem?.previewFit === "contain";
+  const previewBg = previewItem?.previewUseAccent
+    ? previewItem.color
+    : previewItem?.previewBg;
 
   return (
     <nav aria-label="작업 목록" className="works-nav">
@@ -27,17 +26,9 @@ export function PortfolioNav() {
           containPreview ? " board-preview--contain" : ""
         }`}
         aria-hidden={!previewItem}
-        style={
-          previewItem?.id === "ikea-hej-park"
-            ? { background: previewItem.color }
-            : previewItem?.id === "variway" ||
-                previewItem?.id === "lonz" ||
-                previewItem?.id === "lov3-room"
-              ? { background: "#ffffff" }
-              : undefined
-        }
+        style={previewBg ? { background: previewBg } : undefined}
       >
-        {previewItem?.id === "lov3-room" && previewItem.preview ? (
+        {previewItem?.previewMode === "brand" && previewItem.preview ? (
           <div className="board-preview__brand">
             <Image
               src={previewItem.preview}
@@ -47,7 +38,9 @@ export function PortfolioNav() {
               priority
               className="board-preview__brand-logo"
             />
-            <p className="board-preview__brand-label">LOV3_ROOM</p>
+            <p className="board-preview__brand-label">
+              {previewItem.brandLabel ?? previewItem.label}
+            </p>
           </div>
         ) : previewItem?.preview ? (
           <Image

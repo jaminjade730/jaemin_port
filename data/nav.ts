@@ -7,29 +7,67 @@ export type NavItem = {
   color: string;
   tag: string;
   preview?: string;
+  previewFit?: "cover" | "contain";
+  previewBg?: string;
+  /** Use project accent as preview background */
+  previewUseAccent?: boolean;
+  previewMode?: "image" | "brand";
+  brandLabel?: string;
 };
 
-const labels: Record<string, string> = {
-  lonz: "CAFE LONZ",
-  "ikea-hej-park": "HEJI PARK",
-  "korea-travel": "KOREA TRAVEL",
-  variway: "VARIWAY",
-  "lov3-room": "LOV3_ROOM",
+const navExtras: Record<
+  string,
+  Pick<
+    NavItem,
+    "label" | "preview" | "previewFit" | "previewBg" | "previewUseAccent" | "previewMode" | "brandLabel"
+  >
+> = {
+  lonz: {
+    label: "CAFE LONZ",
+    preview: "/projects/lonz/logo.png",
+    previewFit: "cover",
+    previewBg: "#ffffff",
+  },
+  "ikea-hej-park": {
+    label: "HEJ! PARK",
+    preview: "/projects/ikea-hej-park/02-hero.png",
+    previewFit: "contain",
+    previewUseAccent: true,
+  },
+  "korea-travel": {
+    label: "KOREA TRAVEL",
+    preview: "/projects/korea-travel/preview.jpg",
+    previewFit: "cover",
+  },
+  variway: {
+    label: "VARIWAY",
+    preview: "/projects/variway/hero.jpg",
+    previewFit: "contain",
+    previewBg: "#ffffff",
+  },
+  "lov3-room": {
+    label: "LOV3_ROOM",
+    preview: "/projects/lov3-room/instagram.svg",
+    previewFit: "contain",
+    previewBg: "#ffffff",
+    previewMode: "brand",
+    brandLabel: "LOV3_ROOM",
+  },
 };
 
-const previews: Record<string, string> = {
-  lonz: "/projects/lonz/logo.png",
-  "ikea-hej-park": "/projects/ikea-hej-park/02-hero.png",
-  "korea-travel": "/projects/korea-travel/preview.jpg",
-  variway: "/projects/variway/hero.jpg",
-  "lov3-room": "/projects/lov3-room/instagram.svg",
-};
-
-export const navItems: NavItem[] = projects.map((project) => ({
-  id: project.id,
-  label: labels[project.id] ?? project.title,
-  short: project.number,
-  color: project.accent,
-  tag: project.categoryLabel,
-  preview: previews[project.id],
-}));
+export const navItems: NavItem[] = projects.map((project) => {
+  const extra = navExtras[project.id] ?? {};
+  return {
+    id: project.id,
+    label: extra.label ?? project.title,
+    short: project.number,
+    color: project.accent,
+    tag: project.categoryLabel,
+    preview: extra.preview,
+    previewFit: extra.previewFit ?? "cover",
+    previewBg: extra.previewBg,
+    previewUseAccent: extra.previewUseAccent,
+    previewMode: extra.previewMode ?? "image",
+    brandLabel: extra.brandLabel,
+  };
+});
