@@ -1,15 +1,40 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useEffect, useState } from "react";
+import Image from "next/image";
+
+type ResearchItem = {
+  title: string;
+  image: string;
+  body?: string[];
+};
 
 export function ViewResearchToggle({
   label = "VIEW RESEARCH",
-  children,
+  items,
 }: {
   label?: string;
-  children: ReactNode;
+  items: ResearchItem[];
 }) {
   const [open, setOpen] = useState(false);
+  const [preview, setPreview] = useState<ResearchItem | null>(null);
+
+  useEffect(() => {
+    if (!preview) return;
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setPreview(null);
+    };
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [preview]);
 
   return (
     <div className={`case-research${open ? " is-open" : ""}`}>
@@ -26,9 +51,67 @@ export function ViewResearchToggle({
           </svg>
         </span>
       </button>
+
       <div className="case-research__body" hidden={!open}>
-        {children}
+        <div className="case-research__content">
+          {items.map((item) => (
+            <figure key={item.image} className="case-research__item">
+              <figcaption className="case-research__title">{item.title}</figcaption>
+              <button
+                type="button"
+                className="case-research__media"
+                aria-label={`${item.title} 크게 보기`}
+                onClick={() => setPreview(item)}
+              >
+                <Image
+                  src={item.image}
+                  alt={item.title}
+                  width={1600}
+                  height={900}
+                  quality={90}
+                  className="case-research__img"
+                  sizes="(max-width: 860px) 80vw, 240px"
+                />
+              </button>
+              {item.body?.map((paragraph) => (
+                <p key={paragraph} className="case-situation__detail-body">
+                  {paragraph}
+                </p>
+              ))}
+            </figure>
+          ))}
+        </div>
       </div>
+
+      {preview ? (
+        <div
+          className="case-research__lightbox"
+          role="dialog"
+          aria-modal="true"
+          aria-label={preview.title}
+          onClick={() => setPreview(null)}
+        >
+          <button
+            type="button"
+            className="case-research__lightbox-close"
+            aria-label="닫기"
+            onClick={() => setPreview(null)}
+          >
+            ×
+          </button>
+          <div
+            className="case-research__lightbox-panel"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <p className="case-research__lightbox-title">{preview.title}</p>
+            <img
+              src={preview.image}
+              alt={preview.title}
+              className="case-research__lightbox-img"
+            />
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }

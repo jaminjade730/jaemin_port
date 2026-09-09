@@ -24,6 +24,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="ko"
       className={`${geistSans.variable} ${geistMono.variable} min-h-full antialiased`}
+      suppressHydrationWarning
     >
       <head>
         {/* applies the stored theme before first paint so there is no flash */}

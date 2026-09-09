@@ -84,6 +84,47 @@ export type Project = {
     title: string;
     image: string;
     body?: string[];
+  }[];
+  /** PROBLEM 하단 VISIT MOTIVATION (BEFORE → AFTER) */
+  problemInsight?: {
+    title?: string;
+    label?: string;
+    before: { label?: string; text: string };
+    after: { label?: string; text: string };
+    insightLabel?: string;
+    body: string;
+  };
+  /** CONCEPT 섹션 */
+  concept?: {
+    title?: string;
+    name: string;
+    tagline: string;
+    body: string;
+    flow: string[];
+    outdoorPreviews?: { title?: string; images: string[] }[];
+  };
+  /** TARGET STRATEGY 섹션 */
+  targetStrategy?: {
+    title?: string;
+    lead: string;
+    badge?: string;
+    targets: {
+      name: string;
+      body: string;
+      flow: { label: string; text: string }[];
+      slide?: { title?: string; image: string };
+    }[];
+  };
+  /** LOCK-IN STRATEGY 양분 섹션 */
+  lockInStrategy?: {
+    title?: string;
+    columns: {
+      label: string;
+      headline: string;
+      flow: string[];
+      loop?: boolean;
+      body: string;
+    }[];
   };
   /** PROBLEM 하단 가로 단계 카드 */
   situationSteps?: { label: string; title?: string; body?: string }[];
@@ -96,6 +137,8 @@ export type Project = {
   resultItems?: string[];
   /** Result 내 구분 섹션 (있으면 resultItems/result 대신 표시) */
   resultSections?: { label?: string; title: string; body?: string }[];
+  /** Result 섹션 상단 소제목 (예: STRATEGY OUTPUT) */
+  resultEyebrow?: string;
   result: string[];
   learned?: ProjectLearned;
   /** Insight 섹션 (없으면 learned / result 사용) */
@@ -272,8 +315,6 @@ export const projects: Project[] = [
         "/projects/ikea-hej-park/04-mock.png",
         "/projects/ikea-hej-park/05-mock.png",
         "/projects/ikea-hej-park/06-mock.png",
-        "/projects/ikea-hej-park/07-mock.png",
-        "/projects/ikea-hej-park/08-mock.png",
       ],
       result: "/projects/ikea-hej-park/06-mock.png",
     },
@@ -326,72 +367,208 @@ export const projects: Project[] = [
         "“구매할 것이 없는 기존 고객에게 어떻게 다시 IKEA를 방문할 명분을 만들 수 있을까?”",
       body: "IKEA의 긴 구매 주기와 지리적 접근성 한계로 구매 이후 고객과의 접점이 감소하는 문제에 주목하고, 이탈 고객의 복귀와 브랜드 충성도 강화를 핵심 과제로 정의했습니다.",
     },
-    situationResearch: {
-      title: "시장&경쟁사 분석",
-      image: "/projects/ikea-hej-park/09-research-competitors.jpg",
+    situationResearch: [
+      {
+        title: "시장&경쟁사 분석",
+        image: "/projects/ikea-hej-park/09-research-competitors.jpg",
+      },
+      {
+        title: "SWOT 분석",
+        image: "/projects/ikea-hej-park/10-research-swot.jpg",
+      },
+      {
+        title: "전략적 제언",
+        image: "/projects/ikea-hej-park/11-research-strategy.jpg",
+      },
+    ],
+    problemInsight: {
+      title: "VISIT MOTIVATION",
+      before: {
+        label: "BEFORE",
+        text: "“가구를 사러 IKEA에 간다.”",
+      },
+      after: {
+        label: "AFTER",
+        text: "“구매 명분이 없어도 IKEA에서 시간을 보낸다.”",
+      },
+      body: "구매 혜택을 강화하기보다 IKEA가 가진 ‘오프라인 경험’을 야외 활동까지 확장한다면, 긴 구매 주기 사이에도 새로운 방문 명분과 고객 접점을 만들 수 있다고 판단했습니다.",
     },
-    actionTitle: "Action | LOCK-IN JOURNEY",
-    actionJourney: [
-      { label: "01 VISIT MOTIVATION", title: "새로운 방문 명분" },
-      { label: "02 BRAND EXPERIENCE", title: "스웨덴식 피크닉 + 제품 체험" },
-      { label: "03 BRAND FAVORABILITY", title: "즐거운 경험을 IKEA와 연결" },
-      { label: "04 PRODUCT INTEREST", title: "제품 관심" },
-      { label: "05 PURCHASE / REVISIT", title: "구매 및 다음 방문" },
+    concept: {
+      title: "CONCEPT",
+      name: "HEJ! PARK",
+      tagline: "도심 속 파란 쉼표",
+      body: "가구를 구매하는 공간에서, 하루를 보내는 브랜드 경험 공간으로.",
+      flow: [
+        "INDOOR SHOWROOM",
+        "OUTDOOR HEJ! PARK",
+        "LONGER STAY",
+        "MORE BRAND EXPERIENCE",
+      ],
+      outdoorPreviews: [
+        {
+          title: "Daytime",
+          images: ["/projects/ikea-hej-park/12-outdoor-day.jpg"],
+        },
+        {
+          title: "Sunset",
+          images: ["/projects/ikea-hej-park/13-outdoor-sunset.jpg"],
+        },
+        {
+          title: "Mockup",
+          images: [
+            "/projects/ikea-hej-park/07-mock.png",
+            "/projects/ikea-hej-park/08-mock.png",
+          ],
+        },
+      ],
+    },
+    targetStrategy: {
+      title: "TARGET STRATEGY",
+      lead: "하나의 경험도 고객이 움직이는 이유는 다르게.",
+      badge: "3 TARGETS",
+      targets: [
+        {
+          name: "YES-KIDS FAMILY",
+          body: "아이와 함께 보내는 새로운 주말 경험",
+          flow: [
+            {
+              label: "Motivation",
+              text: "방문 유입 및 객단가 방어",
+            },
+            {
+              label: "Media",
+              text: "지역 맘카페 · Instagram Story",
+            },
+            {
+              label: "Action",
+              text: "사전 예약 링크 · F&B 쿠폰 유도",
+            },
+            {
+              label: "KPI",
+              text: "사전 예약 수 · F&B 쿠폰 전환율",
+            },
+          ],
+          slide: {
+            title: "YES-KIDS FAMILY · 매체 플래닝 & KPI",
+            image: "/projects/ikea-hej-park/14-persona-family.jpg",
+          },
+        },
+        {
+          name: "SMART SINGLE LIFE",
+          body: "새로운 공간과 소품을 발견하고 공유하는 경험",
+          flow: [
+            {
+              label: "Motivation",
+              text: "SNS 참여형 이벤트로 흥미 유발",
+            },
+            {
+              label: "Media",
+              text: "Instagram Reels · 오늘의집",
+            },
+            {
+              label: "Action",
+              text: "댓글 이벤트 · CTA 랜딩 유도",
+            },
+            {
+              label: "KPI",
+              text: "홍보 게시물 댓글 수 · CTA 전환율",
+            },
+          ],
+          slide: {
+            title: "SMART SINGLE LIFE · 매체 플래닝 & KPI",
+            image: "/projects/ikea-hej-park/15-persona-single.jpg",
+          },
+        },
+        {
+          name: "DIY HACKERS",
+          body: "IKEA 제품의 새로운 활용법을 발견하는 경험",
+          flow: [
+            {
+              label: "Motivation",
+              text: "크리에이터 영상에 자극된 소비 욕구",
+            },
+            {
+              label: "Media",
+              text: "캠핑 YouTube · QR 제품 스캔",
+            },
+            {
+              label: "Action",
+              text: "크리에이터 할인코드 · 현장 구매",
+            },
+            {
+              label: "KPI",
+              text: "할인코드 증정·사용률",
+            },
+          ],
+          slide: {
+            title: "DIY HACKERS · 매체 플래닝 & KPI",
+            image: "/projects/ikea-hej-park/16-persona-diy.jpg",
+          },
+        },
+      ],
+    },
+    lockInStrategy: {
+      title: "LOCK-IN STRATEGY",
+      columns: [
+        {
+          label: "01. SHORT-TERM LOCK-IN",
+          headline: "STAY LONGER",
+          flow: [
+            "실내 쇼룸",
+            "야외 Hej! Park",
+            "F&B / 이벤트",
+            "제품 체험",
+            "QR 구매",
+          ],
+          body: "실내와 야외 경험을 연결해 IKEA 생태계 안에서의 체류와 제품 접점을 확대",
+        },
+        {
+          label: "02. LONG-TERM LOCK-IN",
+          headline: "COME BACK AGAIN",
+          flow: [
+            "제품 관심",
+            "당일 Push 리마인드",
+            "3개월 후 혜택",
+            "재방문",
+          ],
+          loop: true,
+          body: "페스티벌이 끝난 이후에도 다시 IKEA를 떠올리고 방문할 이유를 설계",
+        },
+      ],
+    },
+    actionTitle: "Action",
+    actions: [],
+    resultEyebrow: "STRATEGY OUTPUT",
+    result: [
+      "단발성 오프라인 페스티벌 아이디어를 타깃 유입 → 브랜드 경험 → 제품 관심·구매 → CRM → 재방문까지 연결되는 Lock-in 캠페인 구조로 구체화했습니다.",
     ],
-    actions: [
-      {
-        title: "문제 정의 및 전략 방향 도출",
-        body: [
-          "시장·경쟁사 및 SWOT 분석을 통해 IKEA의 체험형 매장과 높은 브랜드 인지도를 핵심 자산으로 파악했습니다.\n이를 바탕으로 신규 고객 확보보다 기존 고객에게 새로운 방문 목적을 제공하는 방향으로 전략을 설정했습니다.",
-        ],
-      },
-      {
-        title: "타깃 세분화 및 페르소나 설계",
-        body: [
-          "인구통계적 기준을 넘어 라이프스타일과 니즈를 중심으로 고객군을 세분화하고, 각 타깃의 IKEA 이용 방식과 재방문 동기를 구체화해 캠페인 경험 설계에 반영했습니다.",
-        ],
-      },
-      {
-        title: "Hej! Park 브랜드 경험 캠페인 기획",
-        body: [
-          "IKEA의 제품 경험을 매장 밖으로 확장해, 제품을 야외 활동 속에서 직접 체험할 수 있는 페스티벌형 오프라인 캠페인 Hej! Park를 기획했습니다.\n이를 통해 제품 체험 → 브랜드 경험 → 제품 관심으로 이어지는 새로운 고객 접점을 설계했습니다.",
-        ],
-      },
-      {
-        title: "구매·재방문 Lock-in 구조 설계",
-        body: [
-          "룰렛·제품 체험·QR 구매·패키지 할인으로 현장 경험을 구매 행동과 연결하고, 이후 관심 제품 Push 알림과 3개월 후 사용 가능한 할인권을 통해 경험 → 관심 → 구매 → 리마인드 → 재방문으로 이어지는 고객 여정을 설계했습니다.",
-        ],
-      },
-    ],
-    result: [],
     resultSections: [
       {
-        label: "EXPERIENCE",
-        title: "새로운 방문 목적 설계",
-        body: "구매가 아닌 경험 중심 방문 동기",
+        label: "3 TARGETS",
+        title: "타깃별 전략 구체화",
+        body: "각 타깃의 Motivation · Media · KPI 설계",
       },
       {
-        label: "PURCHASE",
-        title: "체험 → 구매 연결",
-        body: "제품 경험 이후 구매 행동 설계",
+        label: "2-LEVEL LOCK-IN",
+        title: "체류 → 재방문 구조",
+        body: "당일 브랜드 체류와 중장기 관계 지속 연결",
       },
       {
-        label: "CRM",
-        title: "경험 이후 접점 확장",
-        body: "Push 기반 브랜드 리마인드",
+        label: "PACKAGE 15% OFF",
+        title: "현장 구매 유도",
+        body: "제품 QR 탐색 → 공간별 패키지 구매 시\n15% 결합 할인 혜택 설계",
       },
       {
-        label: "REVISIT",
-        title: "재방문 구조 설계",
-        body: "후속 혜택을 통한 다음 방문 동기",
+        label: "3 MONTHS",
+        title: "재방문 접점 설계",
+        body: "행사 이후 다시 IKEA를 방문할 후속 혜택 마련",
       },
     ],
     learned: {
       highlight:
         "좋은 브랜드 아이디어도 고객 행동과 KPI까지 연결되지 않으면 전략으로 설득되기 어렵다는 점을 배웠습니다.",
       body: [
-        "이후 프로젝트에서는 아이디어의 완성도뿐 아니라 정량적 근거와 KPI를 기획 단계부터 함께 설계하는 방식을 적용하게 되었습니다.",
+        "Hej! Park를 기획하며 고객이 왜 방문하고, 어떤 경험을 하며, 이후 어떤 행동으로 이어지는지를 설계했습니다. 이후 피드백과 회고를 통해 타깃별 메시지, UGC 확산, 퍼널별 매체 역할, 데이터 기반 세그먼트 검증까지 구체화해야 한다는 점을 확인했습니다.",
       ],
     },
   },
