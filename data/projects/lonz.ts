@@ -7,8 +7,7 @@ export const lonz: Project = {
     categoryLabel: "BRANDING · CONSUMER INSIGHT · OPERATION",
     title: "LONZ",
     brand: "LONZ",
-    subtitle:
-      "예상 고객과 실제 고객의 차이를 발견하고,\n타깃과 상품을 재설계한 1인 브랜드 운영",
+    subtitle: "타깃과 상품을 설계한 개인 카페 브랜드 운영",
     oneLiner: "고객 관찰 → 타깃 재정의 → 상품 개선",
     hook: "Live in your noize",
     accent: "#2F3B2E",
@@ -123,13 +122,11 @@ export const lonz: Project = {
     resultSections: [
       {
         label: "TARGET",
-        title: "20대 → 30–40대",
-        body: "실제 방문 고객과 상권 특성을 기반으로 핵심 타깃 재설정",
+        title: "30~40대 고객 방문 증가",
       },
       {
         label: "PRODUCT",
-        title: "상품군 확대",
-        body: "스콘 · 르뱅쿠키 · 소프트아이스크림 등 자녀 동반 고객을 고려한 상품 개발",
+        title: "자녀 동반 고객 고려 상품 매출 증가",
       },
       {
         label: "TOUCHPOINT",

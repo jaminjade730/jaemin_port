@@ -3,6 +3,7 @@ import { CaseYouTube } from "@/components/case-youtube";
 import { ConceptFlowVisual } from "@/components/concept-flow-visual";
 import { ProblemInsightBlock } from "@/components/case/problem-insight";
 import { TargetStrategySection } from "@/components/target-strategy-section";
+import { CreativeMaterialsToggle } from "@/components/creative-materials-toggle";
 import { withStyledPhrases, youtubeEmbedId } from "@/components/case/utils";
 import type { Project } from "@/data/projects";
 
@@ -15,7 +16,8 @@ function hasActionStack(project: Project) {
       project.interactiveConcept ||
       project.interactiveJourney ||
       project.aiCreative ||
-      project.distributionKpi,
+      project.creativeStrategy ||
+      project.mediaStrategy,
   );
 }
 
@@ -134,6 +136,92 @@ export function ActionStack({ project }: { project: Project }) {
         </div>
       ) : null}
 
+      {project.creativeStrategy ? (
+        <div className="case-creative-strategy case-action-stack__section">
+          <h4 className="case-action-stack__title">
+            {project.creativeStrategy.title ?? "CREATIVE STRATEGY"}
+          </h4>
+          {project.creativeStrategy.lead ? (
+            <p className="case-lead case-creative-strategy__lead">
+              {project.creativeStrategy.lead}
+            </p>
+          ) : null}
+          <div className="case-creative-strategy__grid">
+            {project.creativeStrategy.items.map((item) => (
+              <article
+                key={item.label}
+                className="case-surface-card case-creative-strategy__card"
+              >
+                <p className="case-kicker case-creative-strategy__label">
+                  {item.label}
+                </p>
+                <p className="case-creative-strategy__title">{item.title}</p>
+                {item.body ? (
+                  <p className="case-creative-strategy__body">{item.body}</p>
+                ) : null}
+              </article>
+            ))}
+          </div>
+          {project.creativeStrategy.materials?.groups.length ? (
+            <CreativeMaterialsToggle
+              label={
+                project.creativeStrategy.materials.label ?? "VIEW CREATIVE"
+              }
+              groups={project.creativeStrategy.materials.groups}
+            />
+          ) : null}
+        </div>
+      ) : null}
+
+      {project.mediaStrategy ? (
+        <div className="case-media-strategy case-action-stack__section">
+          <h4 className="case-action-stack__title">
+            {project.mediaStrategy.title ?? "MEDIA STRATEGY"}
+          </h4>
+          <p className="case-lead case-media-strategy__lead">
+            {project.mediaStrategy.lead}
+          </p>
+          {project.mediaStrategy.body ? (
+            <p className="case-media-strategy__desc">
+              {withStyledPhrases(project.mediaStrategy.body)}
+            </p>
+          ) : null}
+          <div className="case-media-strategy__grid">
+            {project.mediaStrategy.channels.map((channel) => (
+              <article
+                key={channel.label}
+                className="case-surface-card case-media-strategy__card"
+              >
+                <div className="case-media-strategy__card-top">
+                  <p className="case-kicker case-media-strategy__label">
+                    {channel.label}
+                  </p>
+                  <p className="case-media-strategy__share">{channel.share}</p>
+                </div>
+                <p className="case-media-strategy__stage">{channel.stage}</p>
+                <p className="case-media-strategy__body">{channel.body}</p>
+              </article>
+            ))}
+          </div>
+          <div className="case-media-strategy__mix">
+            <p className="case-kicker case-media-strategy__mix-label">
+              {project.mediaStrategy.mix.title ?? "MEDIA MIX"}
+            </p>
+            <p className="case-media-strategy__mix-shares">
+              {project.mediaStrategy.mix.shares}
+            </p>
+            <p className="case-media-strategy__mix-flow">
+              {project.mediaStrategy.mix.flow}
+            </p>
+            {project.mediaStrategy.mix.note ? (
+              <p className="case-media-strategy__mix-note">
+                {project.mediaStrategy.mix.note}
+              </p>
+            ) : null}
+          </div>
+        </div>
+      ) : null}
+
       {project.aiCreative ? (
         <div className="case-ai-creative case-action-stack__section">
           <h4 className="case-action-stack__title">
@@ -192,50 +280,6 @@ export function ActionStack({ project }: { project: Project }) {
               </div>
             ) : null}
           </div>
-        </div>
-      ) : null}
-
-      {project.distributionKpi ? (
-        <div className="case-dist-kpi case-action-stack__section">
-          <h4 className="case-action-stack__title">
-            {project.distributionKpi.title ?? "DISTRIBUTION & TARGET KPI"}
-          </h4>
-          <p className="case-lead case-dist-kpi__lead">
-            {project.distributionKpi.lead}
-          </p>
-          <div className="case-dist-kpi__distribution">
-            <p className="case-kicker case-dist-kpi__section-label">
-              {project.distributionKpi.distribution.title ?? "DISTRIBUTION"}
-            </p>
-            <ul className="case-dist-kpi__channels">
-              {project.distributionKpi.distribution.items.map((item) => (
-                <li key={item} className="case-dist-kpi__channel">
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="case-dist-kpi__kpis">
-            <p className="case-kicker case-dist-kpi__section-label">
-              {project.distributionKpi.kpis.title ?? "TARGET KPI"}
-            </p>
-            <div className="case-dist-kpi__grid">
-              {project.distributionKpi.kpis.items.map((item) => (
-                <article
-                  key={item.label}
-                  className="case-surface-card case-dist-kpi__metric"
-                >
-                  <p className="case-dist-kpi__value">{item.value}</p>
-                  <p className="case-dist-kpi__metric-label">{item.label}</p>
-                </article>
-              ))}
-            </div>
-          </div>
-          {project.distributionKpi.body ? (
-            <p className="case-dist-kpi__body">
-              {withStyledPhrases(project.distributionKpi.body)}
-            </p>
-          ) : null}
         </div>
       ) : null}
 

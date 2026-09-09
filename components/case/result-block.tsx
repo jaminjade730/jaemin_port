@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+import { DistributionKpiSection } from "@/components/case/distribution-kpi-section";
 import { withStyledPhrases } from "@/components/case/utils";
 import type { Project } from "@/data/projects";
 
@@ -48,6 +50,30 @@ function ProsePanel({
   );
 }
 
+function ResultShell({
+  mode,
+  children,
+}: {
+  mode: "panel" | "solo";
+  children: ReactNode;
+}) {
+  if (mode === "solo") {
+    return (
+      <section className="case-block case-result-solo">
+        <h3 className="case-block__title">Result</h3>
+        {children}
+      </section>
+    );
+  }
+
+  return (
+    <div className="case-panel">
+      <h3 className="case-panel__title">Result</h3>
+      {children}
+    </div>
+  );
+}
+
 export function ResultBlock({
   project,
   mode,
@@ -55,9 +81,36 @@ export function ResultBlock({
   project: Project;
   mode: "panel" | "solo";
 }) {
+  const distribution = project.distributionKpi ? (
+    <DistributionKpiSection
+      distributionKpi={project.distributionKpi}
+      className={
+        project.resultSections?.length
+          ? "case-result-dist-kpi"
+          : "case-result-dist-kpi case-result-dist-kpi--primary"
+      }
+    />
+  ) : null;
+
+  const summary =
+    project.result.length > 0 ? (
+      <div className="case-result__summary">
+        {project.resultSummaryLabel ? (
+          <p className="case-result__summary-label">
+            {project.resultSummaryLabel}
+          </p>
+        ) : null}
+        {project.result.map((paragraph, index) => (
+          <p key={`${index}-${paragraph.slice(0, 24)}`}>
+            {withStyledPhrases(paragraph)}
+          </p>
+        ))}
+      </div>
+    ) : null;
+
   if (project.resultSections?.length) {
-    const content = (
-      <>
+    return (
+      <ResultShell mode={mode}>
         {project.resultEyebrow ? (
           <p className="case-result__eyebrow">{project.resultEyebrow}</p>
         ) : null}
@@ -76,37 +129,18 @@ export function ResultBlock({
             </li>
           ))}
         </ul>
-        {project.result.length ? (
-          <div className="case-result__summary">
-            {project.resultSummaryLabel ? (
-              <p className="case-result__summary-label">
-                {project.resultSummaryLabel}
-              </p>
-            ) : null}
-            {project.result.map((paragraph, index) => (
-              <p key={`${index}-${paragraph.slice(0, 24)}`}>
-                {withStyledPhrases(paragraph)}
-              </p>
-            ))}
-          </div>
-        ) : null}
-      </>
+        {summary}
+        {distribution}
+      </ResultShell>
     );
+  }
 
-    if (mode === "solo") {
-      return (
-        <section className="case-block case-result-solo">
-          <h3 className="case-block__title">Result</h3>
-          {content}
-        </section>
-      );
-    }
-
+  if (distribution) {
     return (
-      <div className="case-panel">
-        <h3 className="case-panel__title">Result</h3>
-        {content}
-      </div>
+      <ResultShell mode={mode}>
+        {distribution}
+        {summary}
+      </ResultShell>
     );
   }
 
@@ -116,8 +150,7 @@ export function ResultBlock({
     const items = resultItems.map((item) => ({ title: item }));
     if (mode === "solo") {
       return (
-        <section className="case-block case-result-solo">
-          <h3 className="case-block__title">Result</h3>
+        <ResultShell mode={mode}>
           <ul className="case-panel__list">
             {items.map((item, index) => (
               <li key={`${item.title}-${index}`}>
@@ -125,7 +158,7 @@ export function ResultBlock({
               </li>
             ))}
           </ul>
-        </section>
+        </ResultShell>
       );
     }
     return <BulletPanel title="Result" items={items} />;
@@ -133,8 +166,7 @@ export function ResultBlock({
 
   if (mode === "solo") {
     return (
-      <section className="case-block case-result-solo">
-        <h3 className="case-block__title">Result</h3>
+      <ResultShell mode={mode}>
         <div className="case-panel__prose">
           {project.result.map((paragraph, index) => (
             <p key={`${index}-${paragraph.slice(0, 24)}`}>
@@ -142,7 +174,7 @@ export function ResultBlock({
             </p>
           ))}
         </div>
-      </section>
+      </ResultShell>
     );
   }
 

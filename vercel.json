@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/korea-travel-kpis",
+      "schedule": "0 */8 * * *"
+    }
+  ]
+}

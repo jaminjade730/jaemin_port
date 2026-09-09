@@ -5,7 +5,8 @@ import Image from "next/image";
 
 type ResearchItem = {
   title: string;
-  image: string;
+  image?: string;
+  video?: string;
   body?: string[];
 };
 
@@ -20,7 +21,7 @@ export function ViewResearchToggle({
   const [preview, setPreview] = useState<ResearchItem | null>(null);
 
   useEffect(() => {
-    if (!preview) return;
+    if (!preview?.image && !preview?.video) return;
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") setPreview(null);
@@ -53,26 +54,61 @@ export function ViewResearchToggle({
       </button>
 
       <div className="case-research__body" hidden={!open}>
-        <div className="case-research__content">
+        <div
+          className={`case-research__content${
+            items.length <= 2 ? " case-research__content--pair" : ""
+          }`}
+        >
           {items.map((item) => (
-            <figure key={item.image} className="case-research__item">
+            <figure
+              key={`${item.title}-${item.image ?? item.video ?? "empty"}`}
+              className="case-research__item"
+            >
               <figcaption className="case-research__title">{item.title}</figcaption>
-              <button
-                type="button"
-                className="case-research__media"
-                aria-label={`${item.title} 크게 보기`}
-                onClick={() => setPreview(item)}
-              >
-                <Image
-                  src={item.image}
-                  alt={item.title}
-                  width={1600}
-                  height={900}
-                  quality={90}
-                  className="case-research__img"
-                  sizes="(max-width: 860px) 80vw, 240px"
-                />
-              </button>
+              {item.video ? (
+                <button
+                  type="button"
+                  className="case-research__media case-research__media--video"
+                  aria-label={`${item.title} 크게 보기`}
+                  onClick={() => setPreview(item)}
+                >
+                  <video
+                    className="case-research__video"
+                    src={item.video}
+                    muted
+                    playsInline
+                    preload="metadata"
+                    aria-hidden
+                  />
+                  <span className="case-research__play" aria-hidden>
+                    ▶
+                  </span>
+                </button>
+              ) : item.image ? (
+                <button
+                  type="button"
+                  className="case-research__media"
+                  aria-label={`${item.title} 크게 보기`}
+                  onClick={() => setPreview(item)}
+                >
+                  <Image
+                    src={item.image}
+                    alt={item.title}
+                    width={1600}
+                    height={900}
+                    quality={90}
+                    className="case-research__img"
+                    sizes="(max-width: 860px) 80vw, 240px"
+                  />
+                </button>
+              ) : (
+                <div
+                  className="case-research__placeholder"
+                  aria-label={`${item.title} 이미지 자리`}
+                >
+                  <span>이미지 추가</span>
+                </div>
+              )}
               {item.body?.map((paragraph) => (
                 <p key={paragraph} className="case-situation__detail-body">
                   {paragraph}
@@ -83,7 +119,7 @@ export function ViewResearchToggle({
         </div>
       </div>
 
-      {preview ? (
+      {preview?.image || preview?.video ? (
         <div
           className="case-research__lightbox"
           role="dialog"
@@ -104,11 +140,21 @@ export function ViewResearchToggle({
             onClick={(event) => event.stopPropagation()}
           >
             <p className="case-research__lightbox-title">{preview.title}</p>
-            <img
-              src={preview.image}
-              alt={preview.title}
-              className="case-research__lightbox-img"
-            />
+            {preview.video ? (
+              <video
+                className="case-research__lightbox-video"
+                src={preview.video}
+                controls
+                autoPlay
+                playsInline
+              />
+            ) : (
+              <img
+                src={preview.image}
+                alt={preview.title}
+                className="case-research__lightbox-img"
+              />
+            )}
           </div>
         </div>
       ) : null}

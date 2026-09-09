@@ -13,8 +13,10 @@ import type { Project } from "@/data/projects";
 
 function OneLiner({ text }: { text: string }) {
   const parts = text.split(/\s*→\s*/);
+  const isFlow =
+    parts.length > 1 && parts.every((part) => part.trim().length <= 28);
 
-  if (parts.length <= 1) {
+  if (!isFlow) {
     return <p className="case-header__oneliner">{text}</p>;
   }
 
@@ -100,7 +102,7 @@ function CaseLayouts({ project }: { project: Project }) {
 
   return (
     <>
-      {actionItems.length ? (
+      {actionItems.length && actionImages.length ? (
         <section className="case-zigzag case-zigzag--pair case-zigzag--mockups">
           <ActionTogglePanel
             items={actionItems}
@@ -123,6 +125,15 @@ function CaseLayouts({ project }: { project: Project }) {
               </div>
             ))}
           </div>
+        </section>
+      ) : actionItems.length ? (
+        <section className="case-block">
+          <ActionTogglePanel
+            items={actionItems}
+            title={project.actionTitle}
+            journey={project.actionJourney}
+            accent={project.accent}
+          />
         </section>
       ) : actionImages.length ? (
         <section className="case-block case-mockups-solo">
@@ -267,7 +278,9 @@ export function ProjectChapter({ project }: { project: Project }) {
                   >
                     <p className="case-kicker case-task__label">{goal.label}</p>
                     <p className="case-task__title">{goal.title}</p>
-                    <p className="case-task__body">{goal.body}</p>
+                    {goal.body ? (
+                      <p className="case-task__body">{goal.body}</p>
+                    ) : null}
                   </article>
                 ))}
               </div>

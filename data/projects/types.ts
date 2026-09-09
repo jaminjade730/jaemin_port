@@ -97,15 +97,15 @@ export type Project = {
     lead?: string;
     prompt: string;
     goalsTitle?: string;
-    goals: { label: string; title: string; body: string }[];
+    goals: { label: string; title: string; body?: string }[];
   };
   /** PROBLEM 하단 VISIT MOTIVATION (BEFORE → AFTER) */
   problemInsight?: {
     title?: string;
     label?: string;
     lead?: string;
-    before: { label?: string; text: string };
-    after: { label?: string; text: string };
+    before: { label?: string; title?: string; text: string };
+    after: { label?: string; title?: string; text: string };
     insightLabel?: string;
     body: string;
     /** true면 Action 섹션 안에 배치 */
@@ -135,13 +135,62 @@ export type Project = {
     items: { label: string; title: string; body: string }[];
     images?: { src: string; alt: string; label?: string }[];
   };
+  /** CREATIVE STRATEGY — Action 내 메시지 축 */
+  creativeStrategy?: {
+    title?: string;
+    lead?: string;
+    items: { label: string; title: string; body?: string }[];
+    /** 하단 토글 — 광고 소재 (채널별 슬라이드 그룹) */
+    materials?: {
+      label?: string;
+      groups: {
+        title: string;
+        items: {
+          title: string;
+          image?: string;
+          video?: string;
+          body?: string[];
+        }[];
+      }[];
+    };
+  };
+  /** MEDIA STRATEGY — 채널별 역할·예산 */
+  mediaStrategy?: {
+    title?: string;
+    lead: string;
+    body?: string;
+    channels: {
+      label: string;
+      share: string;
+      stage: string;
+      body: string;
+    }[];
+    mix: {
+      title?: string;
+      shares: string;
+      flow: string;
+      note?: string;
+    };
+  };
   /** DISTRIBUTION & TARGET KPI */
   distributionKpi?: {
     title?: string;
     lead: string;
     distribution: { title?: string; items: string[] };
-    kpis: { title?: string; items: { value: string; label: string }[] };
+    kpis: { title?: string; items: { value: string; label: string; body?: string }[] };
     body?: string;
+    /** YouTube 영상 ID — 있으면 조회수를 주기적으로 갱신 */
+    youtube?: {
+      main: string;
+      heritage: string;
+      trend: string;
+    };
+    /** 달성 KPI 아래 영상 쇼케이스 */
+    showcase?: {
+      label: string;
+      title: string;
+      videos: { id: string; label?: string }[];
+    };
   };
   /** CONCEPT 섹션 */
   concept?: {

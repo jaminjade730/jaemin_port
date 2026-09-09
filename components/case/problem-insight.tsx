@@ -3,6 +3,30 @@ import type { Project } from "@/data/projects";
 
 type Insight = NonNullable<Project["problemInsight"]>;
 
+function InsightCard({
+  side,
+  accent,
+}: {
+  side: Insight["before"];
+  accent?: boolean;
+}) {
+  return (
+    <div
+      className={`case-problem-insight__card${
+        accent ? " case-problem-insight__card--after" : ""
+      }`}
+    >
+      <p className="case-problem-insight__card-label">
+        {side.label ?? (accent ? "AFTER" : "BEFORE")}
+      </p>
+      {side.title ? (
+        <p className="case-problem-insight__card-title">{side.title}</p>
+      ) : null}
+      <p className="case-problem-insight__card-text">{side.text}</p>
+    </div>
+  );
+}
+
 export function ProblemInsightBlock({
   insight,
   mode,
@@ -10,7 +34,8 @@ export function ProblemInsightBlock({
   insight: Insight;
   mode: "block" | "embedded";
 }) {
-  const title = insight.title ?? (mode === "block" ? "VISIT MOTIVATION" : "INSIGHT");
+  const title =
+    insight.title ?? (mode === "block" ? "VISIT MOTIVATION" : "INSIGHT");
 
   const body = (
     <>
@@ -21,25 +46,15 @@ export function ProblemInsightBlock({
         <p className="case-problem-insight__label">{insight.label}</p>
       ) : null}
       <div className="case-problem-insight__shift">
-        <div className="case-problem-insight__card">
-          <p className="case-problem-insight__card-label">
-            {insight.before.label ?? "BEFORE"}
-          </p>
-          <p className="case-problem-insight__card-text">{insight.before.text}</p>
-        </div>
+        <InsightCard side={insight.before} />
         <div className="case-problem-insight__arrow" aria-hidden>
           <span className="case-problem-insight__arrow-desktop">→</span>
           <span className="case-problem-insight__arrow-mobile">↓</span>
         </div>
-        <div className="case-problem-insight__card case-problem-insight__card--after">
-          <p className="case-problem-insight__card-label">
-            {insight.after.label ?? "AFTER"}
-          </p>
-          <p className="case-problem-insight__card-text">{insight.after.text}</p>
-        </div>
+        <InsightCard side={insight.after} accent />
       </div>
       <div className="case-problem-insight__body">
-        {mode === "block" && insight.insightLabel ? (
+        {insight.insightLabel ? (
           <p className="case-problem-insight__body-label">
             {insight.insightLabel}
           </p>

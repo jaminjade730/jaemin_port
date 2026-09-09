@@ -17,8 +17,8 @@ export type {
 
 export const projects: Project[] = [
   lonz,
-  ikeaHejPark,
   koreaTravel,
   variway,
+  ikeaHejPark,
   lov3Room,
 ];

@@ -2,13 +2,12 @@ import type { Project } from "./types";
 
 export const koreaTravel: Project = {
     id: "korea-travel",
-    number: "03",
+    number: "02",
     category: "content",
     categoryLabel: "CONTENT STRATEGY · INTERACTIVE · AI CREATIVE",
     title: "한국 여행, 넌 어느 쪽?",
     brand: "Korea Tourism",
-    subtitle:
-      "‘전통 vs 현대’ 선택 구조로 시청자를 관광 경험에 참여시킨\nAI 한국 관광 콘텐츠",
+    subtitle: "신규 방문을 위한 인터랙티브 AI 영상 콘텐츠",
     oneLiner:
       "한국의 전통과 현대를 A/B 선택 구조로 나누고, 시청자의 선택이 각기 다른 여행 경험으로 이어지는 인터랙티브 관광 콘텐츠를 기획했습니다.",
     hook: "Traditional vs Modern Korea",
@@ -48,8 +47,8 @@ export const koreaTravel: Project = {
           body: "시네마틱 콘텐츠 제작\n1인칭 시점과 AI 영상 제작을 결합해\n직접 여행하는 듯한 관광 경험 구현",
         },
         {
-          label: "3 TARGET KPIs",
-          body: "성과 측정 기준 설계\n시청률 · 조회수 · 평균 시청 지속률을\n콘텐츠 핵심 측정 지표로 설정",
+          label: "4 ACHIEVED KPIs",
+          body: "실제 달성 성과\n메인 조회수와 후속 콘텐츠 시청률로\n인터랙티브 성과를 측정",
         },
       ],
     },
@@ -92,7 +91,7 @@ export const koreaTravel: Project = {
     },
     problemInsight: {
       title: "INSIGHT",
-      lead: "보여주는 것보다\n선택하게 만들자.",
+      lead: "단순히 보여주기보다\n선택하게 만들자",
       before: {
         label: "BEFORE",
         text: "“한국의 다양한 관광지를 보여준다.”",
@@ -184,50 +183,58 @@ export const koreaTravel: Project = {
       ],
     },
     distributionKpi: {
-      title: "DISTRIBUTION & TARGET KPI",
-      lead: "콘텐츠 제작에서\n배포와 측정 설계까지.",
+      title: "DISTRIBUTION & ACHIEVED KPI",
+      lead: "콘텐츠 제작에서\n배포와 측정까지.",
       distribution: {
         title: "DISTRIBUTION",
         items: ["YOUTUBE ADS", "HASHTAG", "CTA"],
       },
       kpis: {
-        title: "TARGET KPI",
+        title: "ACHIEVED KPI",
         items: [
-          { value: "90%", label: "메인 영상 대비 목표 시청률" },
-          { value: "2,800", label: "목표 조회수" },
-          { value: "70%", label: "목표 평균 시청 지속률" },
+          {
+            value: "204",
+            label: "메인 영상 조회수",
+            body: "인터랙티브 콘텐츠의 시작점이 되는 메인 영상 조회\n세 영상 총 조회수 350회 (메인 204 + 헤리티지 86 + 트렌드 60)",
+          },
+          {
+            value: "42.2%",
+            label: "헤리티지 영상 시청률",
+            body: "메인 204회 대비 헤리티지 영상 86회 시청",
+          },
+          {
+            value: "29.4%",
+            label: "트렌드 영상 시청률",
+            body: "메인 204회 대비 트렌드 영상 60회 시청",
+          },
+          {
+            value: "71.6%",
+            label: "메인 대비 후속 콘텐츠 합산 시청률",
+            body: "헤리티지 + 트렌드 총 146회\n146 ÷ 204 × 100 = 71.6%",
+          },
         ],
       },
-      body: "YouTube 광고 및 해시태그·CTA를 활용한 배포 전략과 함께 위 KPI를 목표값으로 설정했습니다.",
+      youtube: {
+        main: "c4ovSfYOkhw",
+        heritage: "Qztxuf9wMB8",
+        trend: "Oml3JtqvMKc",
+      },
+      showcase: {
+        label: "POV × AI",
+        title: "콘텐츠 구현",
+        videos: [
+          { id: "c4ovSfYOkhw", label: "MAIN" },
+          { id: "Qztxuf9wMB8", label: "HERITAGE" },
+          { id: "Oml3JtqvMKc", label: "TREND" },
+        ],
+      },
+      body: "YouTube 광고 및 해시태그·CTA를 활용한 배포 전략과 함께 위 KPI를 실제 달성했습니다.",
     },
     actionTitle: "Action",
     actions: [],
-    resultEyebrow: "STRATEGY OUTPUT",
     resultSummaryLabel: "RESULT SUMMARY",
     result: [
       "일방적으로 관광지를 소개하는 영상에서 벗어나, 시청자의 선택에 따라 콘텐츠가 분기되고 실제 관광지 탐색까지 이어지는 인터랙티브 관광 콘텐츠 구조를 설계하고 AI 영상으로 구현했습니다.",
-    ],
-    resultSections: [
-      {
-        label: "2 ROUTES",
-        title: "선택형 콘텐츠 구조",
-        body: "Tradition / Modern\n두 가지 관광 경험으로 콘텐츠 분기",
-      },
-      {
-        label: "4-STEP JOURNEY",
-        title: "사용자 행동 구조",
-        body: "Watch → Choose → Experience → Explore",
-      },
-      {
-        label: "POV × AI",
-        title: "콘텐츠 구현",
-        body: "1인칭 시네마틱 AI 관광 영상 제작",
-      },
-      {
-        label: "3 TARGET KPIs",
-        title: "성과 측정 구조",
-        body: "시청률 · 조회수 · 평균 시청 지속률",
-      },
     ],
     learned: {
       lead: "콘텐츠를 만드는 것에서\n사용자 행동을 설계하는 것으로.",

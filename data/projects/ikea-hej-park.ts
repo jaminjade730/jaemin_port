@@ -2,13 +2,12 @@ import type { Project } from "./types";
 
 export const ikeaHejPark: Project = {
     id: "ikea-hej-park",
-    number: "02",
+    number: "04",
     category: "campaign",
     categoryLabel: "BRAND STRATEGY · CUSTOMER EXPERIENCE · LOCK-IN",
     title: "IKEA Hej! Park",
     brand: "IKEA",
-    subtitle:
-      "구매가 끝난 고객에게\n다시 IKEA를 방문할 이유를 만들다",
+    subtitle: "이케아 재방문 프로젝트",
     oneLiner:
       "구매 이후 감소하는 고객 접점을 야외 브랜드 경험으로 확장하고, 체류·제품 경험·재방문까지 이어지는 Lock-in 구조를 설계했습니다.",
     summaryBar:
